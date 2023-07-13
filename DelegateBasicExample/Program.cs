@@ -5,7 +5,9 @@
         delegate void LogDel(string text);
         static void Main(string[] args)
         {
-            LogDel logDel = new LogDel(LogTextToFile);
+            Log log = new Log();
+            LogDel logDel = new LogDel(log.LogTextToScreen);
+            
             Console.WriteLine("Please enter you name");
             var name = Console.ReadLine();
             if (name != null && name != "")
@@ -17,13 +19,16 @@
                 Console.WriteLine("The name was empty!");
             }
         }
+    }
 
-        static void LogTextToScreen(string text)
+    public class Log
+    {
+        public void LogTextToScreen(string text)
         {
             Console.WriteLine($"{DateTime.Now}: {text}");
         }
 
-        static void LogTextToFile(string text)
+        public void LogTextToFile(string text)
         {
             using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log.txt"), true))
             {
