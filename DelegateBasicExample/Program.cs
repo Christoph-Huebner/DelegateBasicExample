@@ -3,16 +3,19 @@
     class Program
     {
         delegate void LogDel(string text);
-        static void Main(string[] args)
+        static void Main()
         {
-            Log log = new Log();
-            LogDel logDel = new LogDel(log.LogTextToScreen);
+            LogDel LogTextToScreenDel, LogTextToFileDel;
             
+            LogTextToScreenDel = new(Log.LogTextToScreen);
+            LogTextToFileDel = new(Log.LogTextToFile);
+            LogDel multiLogDel = LogTextToScreenDel + LogTextToFileDel;
+
             Console.WriteLine("Please enter you name");
             var name = Console.ReadLine();
             if (name != null && name != "")
             {
-                logDel(name);
+                multiLogDel(name);
             }
             else
             {
@@ -23,14 +26,14 @@
 
     public class Log
     {
-        public void LogTextToScreen(string text)
+        static public void LogTextToScreen(string text)
         {
             Console.WriteLine($"{DateTime.Now}: {text}");
         }
 
-        public void LogTextToFile(string text)
+        static public void LogTextToFile(string text)
         {
-            using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log.txt"), true))
+            using (StreamWriter sw = new(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log.txt"), true))
             {
                 sw.WriteLine($"{DateTime.Now}: {text}");
             }
